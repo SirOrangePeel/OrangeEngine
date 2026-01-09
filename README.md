@@ -5,7 +5,8 @@ I wanna have something really cool to put on my resume -Aaron
 ## Resources
 
 ### Books
-https://ananyapam7.github.io/resources/C++/Scott_Meyers_Effective_Modern_C++.pdf
+[Effective Modern C++](https://ananyapam7.github.io/resources/C++/Scott_Meyers_Effective_Modern_C++.pdf)
+
 https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/books/CSAPP_2016.pdf
 https://studylib.net/doc/27226791/dokumen.pub-game-engine-architecture-3nbsped-1138035459-9
 https://github.com/samuel-24276/Code-of-CPP-Concurrency-In-Action/blob/masterC%2B%2B%20Concurrency%20in%20Action%20by%20Anthony%20Williams%20(z-lib.org).pdf

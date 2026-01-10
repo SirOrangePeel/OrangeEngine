@@ -1,3 +1,5 @@
+# pragma once 
+
 # include <iostream>
 using namespace std;
 
@@ -10,16 +12,43 @@ class VectorT
         std::size_t size = 0;
         T* buffer = nullptr;
 
-        int hasCapacity() {
-            try {
-                if (capacity == size) throw (100); 
-                return 1;
-            } catch (int errorCode) {
-                cout << "Error Code " << errorCode << ": Vector is at capacity" << endl;
-                return 0;
-            }
+        static T* allocate(std::size_t nSize) {
+            return (T*)operator new(sizeof(T) * nSize);
         }
-        
+
+        void deallocate() {
+            operator delete(buffer);
+        } 
+
+        void EnsureCapacity() {
+            if(size < capacity) return;
+            std::size_t newCapacity = capacity + 1;
+            GrowBuffer(newCapacity);
+        }
+
+        void GrowBuffer(std::size_t newCapacity) {
+            T* newBuffer = allocate(newCapacity);
+
+            std::size_t i = 0;
+            try {
+                for(; i < size; i++)
+                    new (&newBuffer[i]) T(buffer[i]);
+            } catch (...) {
+                for(std::size_t j; j < i; j++) 
+                    newBuffer[j].~T();
+
+                operator delete(newBuffer);
+                throw;
+            }
+
+            for(std::size_t i = 0; i < size; i++) {
+                buffer[i].~T();
+            }
+            operator delete(buffer);
+
+            buffer = newBuffer;
+            capacity = newCapacity;
+        }
 
     public:
         // Default contructor
@@ -29,16 +58,20 @@ class VectorT
         VectorT(std::size_t capacity) {
             // Sets capacity and allocates space for elements 
             this->capacity = capacity;
-            buffer = (T*)operator new(sizeof(T) * capacity);
+            buffer = allocate(capacity);
         }
 
         ~VectorT() {
-            // Deallocates the memory, Using operator delete instead of delete because of operator new
-            for(std::size_t i = 0; i < size; i++) {
-                buffer[i].~T();
-            }
+            Clear();
+            deallocate();
+        }
 
-            operator delete(buffer);
+        std::size_t GetCapacity() {
+            return capacity;
+        }
+
+        std::size_t GetSize() {
+            return size;
         }
 
         /**
@@ -46,20 +79,19 @@ class VectorT
          * 
          * @param value The value of the new element to be added to the vector
          */
-        void push_back(const T& value) {
-            if(hasCapacity()) {
-                new (&buffer[size]) T(value);
-                ++size;
-            }
+        void PushBack(const T& value) {
+            EnsureCapacity();
+            new (&buffer[size]) T(value);
+            size++;
         }
 
         /**
          * @brief Removes the last value of the vector
          * 
          */
-        void pop() {
+        void PopBack() {
             buffer[size].~T();
-            --size;
+            size--;
         }
 
         /**
@@ -68,15 +100,18 @@ class VectorT
          * @param index The desired index of the value
          * @return T A template to allow returns from any class
          */
-        T get(int index) {
+        T At(int index) {
             return buffer[index];
         }
 
-        std::size_t get_capacity() {
-            return capacity;
+        void Clear() {
+            for(std::size_t i = 0; i < size; i++)
+                buffer[i].~T();
+            size = 0;
         }
 
-        std::size_t get_size() {
-            return size;
+        void Reserve(std::size_t newCapacity) {
+            if(capacity >= newCapacity) return;
+            GrowBuffer(newCapacity);
         }
 };

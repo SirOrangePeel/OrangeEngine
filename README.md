@@ -20,3 +20,7 @@ I wanna have something really cool to put on my resume -Aaron
 ### Courses
 [MIT OpenCourseWare: Computational Structures](https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/)<br />
 [Computer Graphics at TU Wien: Rendering (186.101, 2025)](https://www.youtube.com/watch?v=5sY_hoh_IDc&list=PLmIqTlJ6KsE2yXzeq02hqCDpOdtj6n6A9)<br />
+
+
+###
+This is a test commit and push - Kyle Nguyen circa. January 13th, 2026. 

@@ -7,9 +7,9 @@ using U64 = std::uint64_t;
 class Arena {
 
     private:
-        U8* stackBase;
-        U64 stackLocation;
-        U64 stackSize;
+        U8* stackBase;      // The start of the arena
+        U64 stackLocation;  // The byte offset to store to
+        U64 stackSize;      // The total bytes that the arena has reserved
 
     public:
         //Full implementations
@@ -28,4 +28,6 @@ class Arena {
         void HardReset();
         void Rewind(U64 resetLocation);
         U64 MarkLocation() const;
+
+        void EnsureSpace(U64 spaceNeeded);
 };

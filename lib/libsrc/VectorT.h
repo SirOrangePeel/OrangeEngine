@@ -2,6 +2,7 @@
 
 # include <iostream>
 # include <stdexcept>
+
 using namespace std;
 
 template <class T> 
@@ -9,11 +10,11 @@ class VectorT
 {
     private:
         //Data
-        std::size_t capacity = 0;
-        std::size_t size = 0;
+        size_t capacity = 0;
+        size_t size = 0;
         T* buffer = nullptr;
 
-        static T* allocate(std::size_t nSize) {
+        static T* allocate(size_t nSize) {
             return (T*)operator new(sizeof(T) * nSize);
         }
 
@@ -23,27 +24,27 @@ class VectorT
 
         void EnsureCapacity() {
             if(size < capacity) return;
-            std::size_t newCapacity = (capacity == 0) ? 1 : capacity * 2;
+            size_t newCapacity = (capacity == 0) ? 1 : capacity * 2;
             GrowBuffer(newCapacity);
         }
 
-        void GrowBuffer(std::size_t newCapacity) {
+        void GrowBuffer(size_t newCapacity) {
             T* newBuffer = allocate(newCapacity);
 
-            std::size_t i = 0;
+            size_t i = 0;
             try {
                 for(; i < size; i++) {
                     new (&newBuffer[i]) T(buffer[i]);
                 }
             } catch (...) {
-                for(std::size_t j = 0; j < i; j++) 
+                for(size_t j = 0; j < i; j++) 
                     newBuffer[j].~T();
 
                 operator delete(newBuffer);
                 throw;
             }
 
-            for(std::size_t i = 0; i < size; i++) {
+            for(size_t i = 0; i < size; i++) {
                 buffer[i].~T();
             }
             operator delete(buffer);
@@ -57,7 +58,7 @@ class VectorT
         VectorT() = default;
 
         // Constructor with capacity
-        VectorT(std::size_t capacity) {
+        VectorT(size_t capacity) {
             // Sets capacity and allocates space for elements 
             this->capacity = capacity;
             buffer = allocate(capacity);
@@ -68,11 +69,11 @@ class VectorT
             deallocate();
         }
 
-        std::size_t GetCapacity() {
+        size_t GetCapacity() {
             return capacity;
         }
 
-        std::size_t GetSize() {
+        size_t GetSize() {
             return size;
         }
 
@@ -87,7 +88,7 @@ class VectorT
             size++;
         }
 
-        void Push(const T& value, std::size_t index) {
+        void Insert(const T& value, size_t index) {
             if(index > size)
                 index = size;
             new (&buffer[index]) T(value);
@@ -103,27 +104,27 @@ class VectorT
             size--;
         }
 
-        void Remove(std::size_t index) {
+        void Remove(size_t index) {
             T* newBuffer = allocate(size - 1);
 
-            std::size_t  newBufLoc = 0;
+            size_t newBufLoc = 0;
             try {
-                for(std::size_t i = 0; i < size; i++) {
+                for(size_t i = 0; i < size; i++) {
                     if(i == index) continue;
 
-                    new (&buffer[newBufLoc]) T(buffer[i]);
+                    new (&newBuffer[newBufLoc]) T(buffer[i]);
                     newBufLoc++;
                 }
-
             } catch (...) {
-                for(std::size_t j = 0; j < newBufLoc; j++)
+                for(size_t j = 0; j < newBufLoc; j++)
                     newBuffer[j].~T();
 
                 operator delete(newBuffer);
                 throw;
             }
 
-            for(std::size_t i = 0; i < size; i++) {
+
+            for(size_t i = 0; i < size; i++) {
                 buffer[i].~T();
             }
             operator delete(buffer);
@@ -139,18 +140,18 @@ class VectorT
          * @param index The desired index of the value
          * @return T A template to allow returns from any class
          */
-        T At(std::size_t index) {
-            if(index >= size) throw std::out_of_range("VectorT::At");
+        T At(size_t index) {
+            if(index >= size) throw out_of_range("VectorT::At");
             return buffer[index];
         }
 
         void Clear() {
-            for(std::size_t i = 0; i < size; i++)
+            for(size_t i = 0; i < size; i++)
                 buffer[i].~T();
             size = 0;
         }
 
-        void Reserve(std::size_t newCapacity) {
+        void Reserve(size_t newCapacity) {
             if(capacity >= newCapacity) return;
             GrowBuffer(newCapacity);
         }

@@ -74,9 +74,17 @@ int main()
 
     cout << endl;
 
-    intVec.Push(3, 0);
+    cout << "Insert Test" << endl;
+
+    intVec.Insert(3, 0);
+
+    for(std::size_t i = 0; i < intVec.GetSize(); i++){
+        cout << "intVec Element " << i << ": " << intVec.At(i) << endl;
+    }
 
     intVec.Remove(0);
+
+    cout << endl;
 
     for(std::size_t i = 0; i < intVec.GetSize(); i++){
         cout << "intVec Element " << i << ": " << intVec.At(i) << endl;

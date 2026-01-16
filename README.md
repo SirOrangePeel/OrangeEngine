@@ -12,10 +12,18 @@ I wanna have something really cool to put on my resume -Aaron
 [Real-Time Rendering ](http://mutantstargoat.com/~nuclear/tmp/realtime_rendering_4ed.pdf)<br />
 [Designing Data-Intensive Applications](https://unidel.edu.ng/focelibrary/books/Designing%20Data-Intensive%20Applications%20The%20Big%20Ideas%20Behind%20Reliable,%20Scalable,%20and%20Maintainable%20Systems%20by%20Martin%20Kleppmann%20(z-lib.org).pdf)<br />
 [Clean Code: A Handbook of Agile Software Craftmanship](https://github.com/jnguyen095/clean-code/blob/master/Clean.Code.A.Handbook.of.Agile.Software.Craftsmanship.pdf)<br />
+[Game Coding Complete 4th.pdf](https://github.com/RPG59/books-1/blob/master/Game%20Coding%20Complete%204th.pdf)<br />
+[Game Engine Architecture.pdf](https://github.com/RPG59/books-1/blob/master/Game%20Engine%20Architecture.pdf)<br />
+[Mathematics for 3D Game Programming and Computer.Graphics (Third Edition)](https://github.com/RPG59/books-1/blob/master/Mathematics.for.3D.Game.Programming.and.Computer.Graphics.Third.Edition.pdf)<br />
+[Fundamentals of Computer Graphics (3rd Edition)](https://github.com/RPG59/books-1/blob/master/Fundamentals%20of%20Computer%20Graphics%20(3rd%20Edition)%20.pdf)<br />
+
 
 ### Websites
 [Geeks for Geeks: C++ Programming Language](https://www.geeksforgeeks.org/cpp/c-plus-plus/)<br />
 [W3Schools: C++ Tutorial](https://www.w3schools.com/cpp/)<br />
+
+###Repos
+[awesome-computer-graphics](https://github.com/waitin2010/awesome-computer-graphics?tab=readme-ov-file)<br />
 
 ### Courses
 [MIT OpenCourseWare: Computational Structures](https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/)<br />

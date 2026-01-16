@@ -17,42 +17,21 @@ class Position3D
     public:
 
         // This is a default constructor. Assuming when an object is created with a position it starts at the origin.
-        Position3D() {
-            x = 0;
-            y = 0;
-            z = 0;
-        }
-        Position3D(float newX, float newY, float newZ) {
-            x = newX;
-            y = newY;
-            z = newZ;
-        }
-
-        std::tuple<float, float, float> getPosition() {
-            return std::make_tuple(x, y, z);
-        }
-
-        void setPosition(float newX, float newY, float newZ) {
-            x = newX;
-            y = newY;
-            z = newZ;
-        }
-
-        void addPosition(float xVal, float yVal, float zVal) {
-            x += xVal;
-            y += yVal;
-            z += zVal;
-        }
-
-        float getX() {return x;}
-        void setX(float value) {x = value;}
-        void addX(float value) {x += value;}
-        float getY() {return y;}
-        void setY(float value) {y = value;}
-        void addY(float value) {y += value;}
-        float getZ() {return z;}
-        void setZ(float value) {z = value;}
-        void addZ(float value) {z += value;}
+        Position3D();
+        Position3D(float newX, float newY, float newZ);
+        ~Position3D();
+        std::tuple<float, float, float> getPosition();
+        void setPosition(float newX, float newY, float newZ);
+        void addPosition(float xVal, float yVal, float zVal);
+        float getX();
+        void setX(float value);
+        void addX(float value);
+        float getY();
+        void setY(float value);
+        void addY(float value);
+        float getZ();
+        void setZ(float value);
+        void addZ(float value);
 
 
 };

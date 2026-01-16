@@ -22,6 +22,11 @@ class Position3D
             y = 0;
             z = 0;
         }
+        Position3D(float newX, float newY, float newZ) {
+            x = newX;
+            y = newY;
+            z = newZ;
+        }
 
         std::tuple<float, float, float> getPosition() {
             return std::make_tuple(x, y, z);

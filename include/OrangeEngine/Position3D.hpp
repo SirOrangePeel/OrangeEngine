@@ -1,9 +1,5 @@
-#include <iostream>
-#include <string>
+#pragma once
 #include <tuple>
-
-using namespace std;
-
 
 // Kind of a test position3d paramter for future objects
 class Position3D 

@@ -13,3 +13,6 @@ test: VulkanTest
 
 clean:
 	rm -f VulkanTest
+	cd shaders
+	rm shaders/frag.spv
+	rm shaders/vert.spv

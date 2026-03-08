@@ -1,0 +1,5 @@
+# Build output
+VulkanTest
+
+# Compiled shaders
+shaders/*.spv

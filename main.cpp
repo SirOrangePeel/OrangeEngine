@@ -119,15 +119,17 @@ private:
 
     uint32_t currentFrame = 0;  // Tracks which frame's sync objects to use this iteration
 
+    bool framebufferResized = false;
+
     void initWindow() {
         glfwInit();
 
         // Tell GLFW not to create an OpenGL context
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        // Disable window resizing for simplicity
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+        glfwSetWindowUserPointer(window, this);
+        glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
     }
 
     void initVulkan() {
@@ -146,6 +148,11 @@ private:
         createSyncObjects();     // Semaphore and fence creation
     }
 
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+        auto app = reinterpret_cast<VulkanSetUp*>(glfwGetWindowUserPointer(window));
+        app->framebufferResized = true;
+    }
+
     void mainLoop() {
         // Keep window open until user closes it
         while (!glfwWindowShouldClose(window)) {
@@ -158,8 +165,25 @@ private:
         vkDeviceWaitIdle(device);
     }
 
+    void cleanupSwapChain() {
+        // Destroy one framebuffer per swap chain image
+        for (auto framebuffer : swapChainFramebuffers) {
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
+        }
+
+        // Destroy image views before the images themselves
+        for(auto imageView : swapChainImageViews) {
+            vkDestroyImageView(device, imageView, nullptr);
+        }
+
+        // Swap chain images are owned by the swap chain and destroyed with it
+        vkDestroySwapchainKHR(device, swapChain, nullptr);
+    }
+
     // Destroy resources in reverse order of creation
     void cleanup() {
+        cleanupSwapChain();
+
         // Destroy per-frame synchronization objects
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
@@ -170,22 +194,10 @@ private:
         // Command buffers are freed implicitly when the pool is destroyed
         vkDestroyCommandPool(device, commandPool, nullptr);
 
-        // Destroy one framebuffer per swap chain image
-        for (auto framebuffer : swapChainFramebuffers) {
-            vkDestroyFramebuffer(device, framebuffer, nullptr);
-        }
-
         vkDestroyPipeline(device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         vkDestroyRenderPass(device, renderPass, nullptr);
 
-        // Destroy image views before the images themselves
-        for(auto imageView : swapChainImageViews) {
-            vkDestroyImageView(device, imageView, nullptr);
-        }
-
-        // Swap chain images are owned by the swap chain and destroyed with it
-        vkDestroySwapchainKHR(device, swapChain, nullptr);
         vkDestroyDevice(device, nullptr);
 
         if (enableValidationLayers) {
@@ -204,13 +216,22 @@ private:
     void drawFrame() {
         // Wait until the previous use of this frame's resources has completed
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
-        // Manually reset the fence back to unsignaled so it can be used again
-        vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
         // Request the next available image from the swap chain
         // imageAvailableSemaphore will be signaled when the image is ready to write to
         uint32_t imageIndex;
-        vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+        VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+        if(result == VK_ERROR_OUT_OF_DATE_KHR) {
+            recreateSwapChain();
+            return;
+        } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+            throw std::runtime_error("Failed to acquire swapchain image");
+        }
+
+        // Only reset the fence if we are submitting work
+        // Manually reset the fence back to unsignaled so it can be used again
+        vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
         // Clear any previously recorded commands and re-record for this frame
         vkResetCommandBuffer(commandBuffers[currentFrame], 0);
@@ -252,7 +273,14 @@ private:
         presentInfo.pResults = nullptr;  // Optional array for per-swap-chain result codes
 
         // Submit the image to the presentation engine
-        vkQueuePresentKHR(presentQueue, &presentInfo);
+        result = vkQueuePresentKHR(presentQueue, &presentInfo);
+
+        if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
+            framebufferResized = false;
+            recreateSwapChain();
+        } else if (result != VK_SUCCESS) {
+            throw std::runtime_error("Failed to acquire swap chain image");
+        }
 
         // Advance to the next frame, wrapping around at MAX_FRAMES_IN_FLIGHT
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
@@ -1066,6 +1094,16 @@ private:
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
             throw std::runtime_error("Failed to record command buffer");
         }
+    }
+
+    void recreateSwapChain() {
+        vkDeviceWaitIdle(device);
+
+        cleanupSwapChain();
+
+        createSwapChain();
+        createImageViews();
+        createFramebuffers();
     }
 };
 

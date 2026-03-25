@@ -150,7 +150,7 @@ const std::vector<uint16_t> indices = {
     0, 1, 2, 2, 3, 0
 };
 
-class VulkanRenderer {
+class OrangeEngine {
 public:
     void run() {
         initWindow();   // Create the OS window via GLFW
@@ -232,7 +232,7 @@ private:
     // Static GLFW callback — called whenever the framebuffer is resized.
     // Sets the flag so drawFrame() knows to recreate the swap chain next iteration.
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-        auto app = reinterpret_cast<VulkanRenderer*>(glfwGetWindowUserPointer(window));
+        auto app = reinterpret_cast<OrangeEngine*>(glfwGetWindowUserPointer(window));
         app->framebufferResized = true;
     }
 
@@ -1466,7 +1466,7 @@ private:
 };
 
 int main() {
-    VulkanRenderer app;
+    OrangeEngine app;
 
     try {
         app.run();

@@ -3,3 +3,6 @@ VulkanTest
 
 # Compiled shaders
 shaders/*.spv
+
+# Editor
+.vscode/

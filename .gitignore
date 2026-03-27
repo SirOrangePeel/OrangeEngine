@@ -6,3 +6,5 @@ shaders/*.spv
 
 # Editor
 .vscode/
+
+textures/texture.jpeg

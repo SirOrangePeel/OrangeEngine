@@ -4,7 +4,7 @@
 
 ## About
 
-OrangeEngine is a bare-metal game engine written in C++. This project is a work in progress — currently following the [Vulkan Tutorial](https://vulkan-tutorial.com/) to get the graphics pipeline up and running.
+OrangeEngine is a game engine written in C++. This project is a work in progress — currently following the [Vulkan Tutorial](https://vulkan-tutorial.com/) to get the graphics pipeline up and running.
 
 ## Current Features
 
